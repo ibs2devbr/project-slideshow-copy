@@ -334,10 +334,11 @@
             if (in_array (strtolower (pathinfo ($is_index)['extension']), defineExtensionPicture))
                 $is_array[] = implode ('/', [ '.', ...explode ('/', $is_input), $is_index ]);
         $is_proper = [
+            'arrow' => '2rem',
             'background-color' => '#292a2c',
             'color' => '#fff',
-            'arrow' => '2rem',
             'dot' => '.5rem',
+            'space-between' => 1,
             'template' => inArray ($is_template, [ 'photo', 'slide' ]),
             'x' => '1rem',
             'y' => '2.5rem',
@@ -482,9 +483,9 @@
                         'bottom' => $is_proper['x'],
                         'display' => 'flex',
                         'justify-content' => 'space-between',
-                        'left' => 'calc((100% - ' . $is_proper['dot'] . ' * ' . (count ($is_array) * 2 - 1) . ') / 2)',
+                        'left' => 'calc((100% - ' . $is_proper['dot'] . ' * ' . (count ($is_array) * ($is_proper['space-between'] + 1) - 1) . ') / 2)',
                         'position' => 'absolute',
-                        'width' => 'calc(' . $is_proper['dot'] . ' * ' . (count ($is_array) * 2 - 1) . ')',
+                        'width' => 'calc(' . $is_proper['dot'] . ' * ' . (count ($is_array) * ($is_proper['space-between'] + 1) - 1) . ')',
                         'z-index' => 2,
                     ]),
                 '>',
