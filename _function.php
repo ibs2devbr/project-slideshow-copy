@@ -332,21 +332,15 @@
         $is_array = [];
         foreach (array_diff (scandir ($is_input), [ '.', '..' ]) as $is_index)
             if (in_array (strtolower (pathinfo ($is_index)['extension']), defineExtensionPicture))
-                $is_array[] = implode ('/', [ '.', $is_input, $is_index ]);
+                $is_array[] = implode ('/', [ '.', ...explode ('/', $is_input), $is_index ]);
         $is_proper = [
-
-            'dot-background' => '#292a2c',
-            'dot-size' => '.5rem',
-
-            'slide-margin-x' => '1rem',
-            'slide-margin-y' => '2.5rem',
-            'slide-template' => inArray ($is_template, [ 'photo', 'slide' ]),
-
-            'transition-background' => '#000',
-            'transition-color' => '#fff',
-            'transition-margin' => '1rem',
-            'transition-size' => '3rem',
-            
+            'background-color' => '#292a2c',
+            'color' => '#fff',
+            'arrow' => '2rem',
+            'dot' => '.5rem',
+            'template' => inArray ($is_template, [ 'photo', 'slide' ]),
+            'x' => '1rem',
+            'y' => '2.5rem',
         ];
         return [
             '<div',
@@ -378,12 +372,12 @@
                                 'z-index' => 1,
                             ]),
                         '>',
-                            ...in_array ($is_proper['slide-template'], [ 'photo' ]) ? [
+                            ...in_array ($is_proper['template'], [ 'photo' ]) ? [
                                 '<img',
                                     ' src=\'' . $i . '\'',
                                     ...setClass ([ setFileName ([ $is_set, 'photo' ]) ]),
                                     ...setStyle ([
-                                        'height' => 'calc(100% - ' . $is_proper['slide-margin-y'] . ' * 2)',
+                                        'height' => 'calc(100% - ' . $is_proper['y'] . ' * 2)',
                                         'left' => '50%',
                                         'position' => 'absolute',
                                         'top' => '50%',
@@ -416,13 +410,13 @@
                         '<div',
                             ...setClass ([ setFileName ([ $is_set, $i ]) ]),
                             ...setStyle ([
-                                ...$i === 'next' ? [ 'right' => $is_proper['transition-margin'] ] : [],
-                                ...$i === 'prev' ? [ 'left' => $is_proper['transition-margin'] ] : [],
+                                ...$i === 'next' ? [ 'right' => $is_proper['x'] ] : [],
+                                ...$i === 'prev' ? [ 'left' => $is_proper['x'] ] : [],
                                 'cursor' => 'pointer',
-                                'height' => $is_proper['transition-size'],
+                                'height' => $is_proper['arrow'],
                                 'position' => 'absolute',
-                                'top' => 'calc((100% - ' . $is_proper['transition-size'] . ') / 2)',
-                                'width' => $is_proper['transition-size'],
+                                'top' => 'calc((100% - ' . $is_proper['arrow'] . ') / 2)',
+                                'width' => $is_proper['arrow'],
                                 'z-index' => 2,
                             ]),
                         '>',
@@ -431,14 +425,14 @@
                                 ...setStyle ([
                                     'background-color' => '#fff',
                                     'border-radius' => '50%',
-                                    'height' => 'calc(' . $is_proper['transition-size'] . ' + .5rem)',
+                                    'height' => 'calc(' . $is_proper['arrow'] . ' + .5rem)',
                                     'left' => '50%',
                                     'opacity' => .5,
                                     'position' => 'absolute',
                                     'top' => '50%',
                                     'transform' => 'translate(-50%, -50%)',
                                     'transition' => '0.35s ease-in-out',
-                                    'width' => 'calc(' . $is_proper['transition-size'] . ' + .5rem)',
+                                    'width' => 'calc(' . $is_proper['arrow'] . ' + .5rem)',
                                     'z-index' => 1,
                                 ]),
                             '>',
@@ -447,23 +441,23 @@
                                 ...setClass ([ setFileName ([ $is_set, 'icon' ]) ]),
                                 ...setStyle ([
                                     'align-items' => 'center',
-                                    'background-color' => $is_proper['transition-background'],
+                                    'background-color' => $is_proper['background-color'],
                                     'border-radius' => '50%',
                                     'display' => 'flex',
-                                    'height' => $is_proper['transition-size'],
+                                    'height' => $is_proper['arrow'],
                                     'justify-content' => 'center',
                                     'left' => '50%',
                                     'position' => 'absolute',
                                     'top' => '50%',
                                     'transform' => 'translate(-50%, -50%)',
-                                    'width' => $is_proper['transition-size'],
+                                    'width' => $is_proper['arrow'],
                                     'z-index' => 2,
                                 ]),
                             '>',
                                 '<a',
                                     ...setStyle ([
-                                        'color' => $is_proper['transition-color'],
-                                        'font-size' => 'calc(' . $is_proper['transition-size'] . ' / 2)',
+                                        'color' => $is_proper['color'],
+                                        'font-size' => 'calc(' . $is_proper['arrow'] . ' / 2)',
                                         'font-weight' => 'bold',
                                         'user-select' => 'none',
                                     ]),
@@ -485,30 +479,30 @@
                 '<div',
                     ...setStyle ([
                         'align-items' => 'center',
-                        'bottom' => $is_proper['slide-margin-x'],
+                        'bottom' => $is_proper['x'],
                         'display' => 'flex',
                         'justify-content' => 'space-between',
-                        'left' => 'calc((100% - ' . $is_proper['dot-size'] . ' * ' . (count ($is_array) * 2 - 1) . ') / 2)',
+                        'left' => 'calc((100% - ' . $is_proper['dot'] . ' * ' . (count ($is_array) * 2 - 1) . ') / 2)',
                         'position' => 'absolute',
-                        'width' => 'calc(' . $is_proper['dot-size'] . ' * ' . (count ($is_array) * 2 - 1) . ')',
+                        'width' => 'calc(' . $is_proper['dot'] . ' * ' . (count ($is_array) * 2 - 1) . ')',
                         'z-index' => 2,
                     ]),
                 '>',
                     ...array_map (function ($i, $k) use ($is_proper, $is_set) {
                         return implode ('', [
-                            '<span',
+                            '<div',
                                 ...setClass ([ setFileName ([ $is_set, 'icon' ]) ]),
                                 ...setStyle ([
-                                    'background-color' => $is_proper['dot-background'],
+                                    'background-color' => $is_proper['background-color'],
                                     'border-radius' => '50%',
                                     'cursor' => 'pointer',
                                     'display' => 'block',
-                                    'height' => $is_proper['dot-size'],
+                                    'height' => $is_proper['dot'],
                                     'transition' => '0.35s ease-in-out',
-                                    'width' => $is_proper['dot-size'],
+                                    'width' => $is_proper['dot'],
                                 ]),
                             '>',
-                            '</span>',
+                            '</div>',
                         ]);
                     }, range (0, count ($is_array) - 1), array_keys (range (0, count ($is_array) - 1))),
                 '</div>',
