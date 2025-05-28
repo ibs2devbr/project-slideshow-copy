@@ -1,0 +1,27 @@
+.table-light {
+    --bs-table-color: #{ $color-black };
+    --bs-table-bg: #{ $color-white };
+    --bs-table-border-color: #{ $color-light };
+    --bs-table-striped-bg: #{ $color-light };
+    --bs-table-striped-color: #{ $color-black };
+    --bs-table-active-bg: #{ $color-light };
+    --bs-table-active-color: #{ $color-black };
+    --bs-table-hover-bg: #{ $color-danger };
+    --bs-table-hover-color: #{ $color-light };
+    color: var(--bs-table-color);
+    border-color: var(--bs-table-border-color);
+}
+
+.table-dark {
+    --bs-table-color: #{ $color-white };
+    --bs-table-bg: #{ $color-black };
+    --bs-table-border-color: #{ $color-dark };
+    --bs-table-striped-bg: #{ $color-dark };
+    --bs-table-striped-color: #{ $color-white };
+    --bs-table-active-bg: #{ $color-dark };
+    --bs-table-active-color: #{ $color-white };
+    --bs-table-hover-bg: #{ $color-info };
+    --bs-table-hover-color: #{ $color-dark };
+    color: var(--bs-table-color);
+    border-color: var(--bs-table-border-color);
+}

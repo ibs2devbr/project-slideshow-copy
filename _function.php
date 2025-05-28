@@ -328,59 +328,79 @@
     };
 
     function setSlideShow (string $is_input = 'jpg', string $is_template = 'photo'): array {
+        $is_set = 'slide';
         $is_array = [];
         foreach (array_diff (scandir ($is_input), [ '.', '..' ]) as $is_index)
             if (in_array (strtolower (pathinfo ($is_index)['extension']), defineExtensionPicture))
                 $is_array[] = implode ('/', [ '.', $is_input, $is_index ]);
         $is_proper = [
-            'dot-background' => 'grey',
+
+            'dot-background' => '#292a2c',
             'dot-size' => '.5rem',
+
             'slide-margin-x' => '1rem',
             'slide-margin-y' => '2.5rem',
             'slide-template' => inArray ($is_template, [ 'photo', 'slide' ]),
+
             'transition-background' => '#000',
             'transition-color' => '#fff',
             'transition-margin' => '1rem',
             'transition-size' => '3rem',
+            
         ];
         return [
-            '<div', ...setStyle ([ 'height' => '100%', 'width' => '100%' ]), '>',
-                ...array_map (function ($i) use ($is_proper) {
+            '<div',
+                ...setClass ([ setFileName ([ $is_set, 'wrapper' ]) ]),
+                ...setStyle ([
+                    'height' => '100%',
+                    'position' => 'relative',
+                    'width' => '100%',
+                ]),
+            '>',
+                ...array_map (function ($i, $k) use ($is_proper, $is_set) {
                     return implode ('', [
                         '<div',
-                            ...setClass ([ 'slide' ]),
+                            ...setClass ([ setFileName ([ $is_set, 'content' ]) ]),
                             ...setStyle ([
                                 'background-attachment' => 'scroll',
                                 'background-image' => 'url(' . $i . ')',
                                 'background-position' => 'center',
                                 'background-repeat' => 'no-repeat',
                                 'background-size' => 'cover',
+                                'display' => !$k ? 'block' : 'none',
                                 'height' => '100%',
-                                'position' => 'relative',
+                                'left' => 0,
+                                'opacity' => !$k ? 1 : 0,
+                                'position' => 'absolute',
+                                'top' => 0,
                                 'transition' => '0.35s ease-in-out',
                                 'width' => '100%',
-                                'z-index' => '1',
+                                'z-index' => 1,
                             ]),
                         '>',
                             ...in_array ($is_proper['slide-template'], [ 'photo' ]) ? [
                                 '<img',
                                     ' src=\'' . $i . '\'',
+                                    ...setClass ([ setFileName ([ $is_set, 'photo' ]) ]),
                                     ...setStyle ([
                                         'height' => 'calc(100% - ' . $is_proper['slide-margin-y'] . ' * 2)',
                                         'left' => '50%',
                                         'position' => 'absolute',
                                         'top' => '50%',
                                         'transform' => 'translate(-50%, -50%)',
-                                        'z-index' => '2',
+                                        'z-index' => 2,
                                     ]),
                                 '>',
                                 '<div',
+                                    ...setClass ([ setFileName ([ $is_set, 'filter' ]) ]),
                                     ...setStyle ([
                                         '-webkit-backdrop-filter' => 'blur(5px)',
                                         'backdrop-filter' => 'blur(5px)',
                                         'background-color' => 'rgba(0, 0, 0, .75)',
                                         'height' => '100%',
+                                        'left' => 0,
                                         'position' => 'absolute',
+                                        'top' => 0,
                                         'width' => '100%',
                                         'z-index' => 1,
                                     ]),
@@ -390,11 +410,11 @@
                             ],
                         '</div>',
                     ]);
-                }, $is_array),
-                ...array_map (function ($i) use ($is_proper) {
+                }, $is_array, array_keys ($is_array)),
+                ...array_map (function ($i) use ($is_proper, $is_set) {
                     return implode ('', [
                         '<div',
-                            ...setClass ([ $i ]),
+                            ...setClass ([ setFileName ([ $is_set, $i ]) ]),
                             ...setStyle ([
                                 ...$i === 'next' ? [ 'right' => $is_proper['transition-margin'] ] : [],
                                 ...$i === 'prev' ? [ 'left' => $is_proper['transition-margin'] ] : [],
@@ -407,6 +427,7 @@
                             ]),
                         '>',
                             '<div',
+                                ...setClass ([ setFileName ([ $is_set, 'border' ]), ]),
                                 ...setStyle ([
                                     'background-color' => '#fff',
                                     'border-radius' => '50%',
@@ -423,6 +444,7 @@
                             '>',
                             '</div>',
                             '<div',
+                                ...setClass ([ setFileName ([ $is_set, 'icon' ]) ]),
                                 ...setStyle ([
                                     'align-items' => 'center',
                                     'background-color' => $is_proper['transition-background'],
@@ -472,10 +494,10 @@
                         'z-index' => 2,
                     ]),
                 '>',
-                    ...array_map (function ($i) use ($is_proper) {
+                    ...array_map (function ($i, $k) use ($is_proper, $is_set) {
                         return implode ('', [
                             '<span',
-                                ...setClass ([ 'dot' ]),
+                                ...setClass ([ setFileName ([ $is_set, 'icon' ]) ]),
                                 ...setStyle ([
                                     'background-color' => $is_proper['dot-background'],
                                     'border-radius' => '50%',
@@ -488,7 +510,7 @@
                             '>',
                             '</span>',
                         ]);
-                    }, range (0, count ($is_array) - 1)),
+                    }, range (0, count ($is_array) - 1), array_keys (range (0, count ($is_array) - 1))),
                 '</div>',
             '</div>',
         ];

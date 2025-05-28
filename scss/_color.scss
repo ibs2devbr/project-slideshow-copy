@@ -1,0 +1,14 @@
+$color: (
+    'black': #{ $color-black },
+    'dark': #{ $color-dark },
+    'white': #{ $color-white },
+    'light': #{ $color-light },
+    'danger': #{ $color-danger },
+    'info': #{ $color-info },
+);
+
+@each $key, $value in $color {
+    .bg-#{$key} { background-color: $value !important; };
+    .border-#{$key} { border-color: $value !important; };
+    .text-#{$key} { color: $value !important; };
+};
