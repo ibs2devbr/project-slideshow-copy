@@ -1,20 +1,25 @@
 {
-  "name": "project-slideshow",
+  "name": "project-name",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "main": "./index.js",
   "scripts": {
-    "dev": "concurrently \"npm run sass\" \"npm run nodemon\"",
-    "sass": "sass scss/style.scss css/_style.css --watch",
-    "nodemon": "nodemon index.js"
+    "dev": "concurrently \"npm run sass\" \"npm run cssnano\" \"npm run nodemon\"",
+    "sass": "sass ./scss/style.scss ./css/_style.css --watch",
+    "cssnano": "cssnano ./css/_style.css ./css/minify.css --watch",
+    "nodemon": "nodemon ./index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "## _Histórico_",
   "devDependencies": {
+    "clean-css": "^5.3.3",
     "concurrently": "^9.1.2",
+    "cssnano": "^7.0.7",
+    "nano": "^10.1.4",
     "nodemon": "^3.1.10",
+    "postcss": "^8.5.3",
     "sass": "^1.89.0"
   },
   "dependencies": {

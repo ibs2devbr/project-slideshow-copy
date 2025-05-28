@@ -1,22 +1,3 @@
-$color-black: #131314;
-$color-white: #ffffff;
-$color-dark: #1e1f20;
-$color-light: #f4f2ee;
-$color-info: #0dcaf0;
-$color-danger: #dc3545;
-
-@import 'button.scss';
-
-@import 'color.scss';
-
-@import 'palette.scss';
-
-@import 'scrollbar.scss';
-
-@import 'selector.scss';
-
-@import 'table.scss';
-
 html,
 body
 {
@@ -24,22 +5,4 @@ body
     padding: 0;
     width: 100%;
     height: 100%;
-}
-.slide 
-{
-    display: none;
-    opacity: 0;
-}
-.slide.active
-{
-    display: block;
-    opacity: 1;
-}
-.dot
-{
-    background-color: grey;
-}
-.active, .dot:hover
-{
-    background-color: red;
 }

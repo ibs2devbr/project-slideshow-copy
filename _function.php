@@ -327,18 +327,17 @@
         return in_array ($is_input, setArray ($is_array)) ? $is_input : $is_return;
     };
 
-    function setSlideShow (string $is_input = 'jpg', string $is_model = 'photo'): array {
+    function setSlideShow (string $is_input = 'jpg', string $is_template = 'photo'): array {
         $is_array = [];
         foreach (array_diff (scandir ($is_input), [ '.', '..' ]) as $is_index)
             if (in_array (strtolower (pathinfo ($is_index)['extension']), defineExtensionPicture))
                 $is_array[] = implode ('/', [ '.', $is_input, $is_index ]);
         $is_proper = [
-            'model' => inArray ($is_model, [ 'photo', 'slide' ]),
-            'container-margin' => '1rem',
-            'container-size' => count ($is_array) * 2 - 1,
             'dot-background' => 'grey',
             'dot-size' => '.5rem',
-            'slide-margin' => '2.5rem',
+            'slide-margin-x' => '1rem',
+            'slide-margin-y' => '2.5rem',
+            'slide-template' => inArray ($is_template, [ 'photo', 'slide' ]),
             'transition-background' => '#000',
             'transition-color' => '#fff',
             'transition-margin' => '1rem',
@@ -363,11 +362,11 @@
                                 'z-index' => '1',
                             ]),
                         '>',
-                            ...in_array ($is_proper['model'], [ 'photo' ]) ? [
+                            ...in_array ($is_proper['slide-template'], [ 'photo' ]) ? [
                                 '<img',
                                     ' src=\'' . $i . '\'',
                                     ...setStyle ([
-                                        'height' => 'calc(100% - ' . $is_proper['slide-margin'] . ' * 2)',
+                                        'height' => 'calc(100% - ' . $is_proper['slide-margin-y'] . ' * 2)',
                                         'left' => '50%',
                                         'position' => 'absolute',
                                         'top' => '50%',
@@ -406,10 +405,6 @@
                                 'width' => $is_proper['transition-size'],
                                 'z-index' => 2,
                             ]),
-                            ' onclick=\'setPlusSlides(',
-                                ...$i === 'next' ? [ '1' ] : [],
-                                ...$i === 'prev' ? [ '-1' ] : [],
-                            ')\'',
                         '>',
                             '<div',
                                 ...setStyle ([
@@ -468,12 +463,12 @@
                 '<div',
                     ...setStyle ([
                         'align-items' => 'center',
-                        'bottom' => $is_proper['container-margin'],
+                        'bottom' => $is_proper['slide-margin-x'],
                         'display' => 'flex',
                         'justify-content' => 'space-between',
-                        'left' => 'calc((100% - ' . $is_proper['dot-size'] . ' * ' . $is_proper['container-size'] . ') / 2)',
+                        'left' => 'calc((100% - ' . $is_proper['dot-size'] . ' * ' . (count ($is_array) * 2 - 1) . ') / 2)',
                         'position' => 'absolute',
-                        'width' => 'calc(' . $is_proper['dot-size'] . ' * ' . $is_proper['container-size'] . ')',
+                        'width' => 'calc(' . $is_proper['dot-size'] . ' * ' . (count ($is_array) * 2 - 1) . ')',
                         'z-index' => 2,
                     ]),
                 '>',
@@ -482,6 +477,7 @@
                             '<span',
                                 ...setClass ([ 'dot' ]),
                                 ...setStyle ([
+                                    'background-color' => $is_proper['dot-background'],
                                     'border-radius' => '50%',
                                     'cursor' => 'pointer',
                                     'display' => 'block',
@@ -489,7 +485,6 @@
                                     'transition' => '0.35s ease-in-out',
                                     'width' => $is_proper['dot-size'],
                                 ]),
-                                ' onclick=\'setCurrentSlide(' . ($i + 1) . ')\'',
                             '>',
                             '</span>',
                         ]);

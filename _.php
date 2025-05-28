@@ -10,23 +10,6 @@
 
     define ('defineBodyContent', [
         ...setSlideShow (),
-        '<script>
-            let index = 1;
-            setShowSlide (index);
-            function setPlusSlides (n) { setShowSlide (index += n); };
-            function setCurrentSlide (n) { setShowSlide (index = n); };
-            function setShowSlide (n) {
-                let i;
-                const slide = document.getElementsByClassName (\'slide\');
-                const dot = document.getElementsByClassName (\'dot\');
-                if (n > slide[\'length\']) { index = 1 }
-                if (n < 1) { index = slide[\'length\'] }
-                for (i = 0; i < slide[\'length\']; i++) { slide[i][\'classList\'].remove (\'active\'); };
-                for (i = 0; i < dot[\'length\']; i++) { dot[i][\'className\'] = dot[i][\'className\'].replace (\' active\', \'\'); };
-                if (slide[\'length\'] > 0) { slide[index - 1][\'classList\'].add (\'active\'); };
-                if (dot[\'length\'] > 0) { dot[index - 1][\'className\'] += \' active\'; };
-            };
-        </script>',
         // ...setSELETOR (defineMainContent, [ 'wrap' => 'main' ]),
         // ...setSELETOR (defineFooterContent, [ 'wrap' => 'footer' ]),
     ]);
