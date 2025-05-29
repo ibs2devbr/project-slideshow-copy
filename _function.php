@@ -36,13 +36,8 @@
                 'justify-content' => inArray ($is_input, [ 'start', 'end', 'center', 'space-between', 'space-around', 'space-evenly' ], 'center'),
             ],
             'filter-blur' => [
-                ...in_array ($is_input, setDecimalRange (10)) ? [
-                    '-webkit-backdrop-filter' => 'blur(' . $is_input . 'px)',
-                    'backdrop-filter' => 'blur(' . $is_input . 'px)',
-                ] : [
-                    '-webkit-backdrop-filter' => 'blur(5px)',
-                    'backdrop-filter' => 'blur(5px)',
-                ],
+                '-webkit-backdrop-filter' => 'blur(' . (in_array ($is_input, setDecimalRange (100)) ? $is_input : 5) . 'px)',
+                'backdrop-filter' => 'blur(' . (in_array ($is_input, setDecimalRange (100)) ? $is_input : 5) . 'px)',
             ],
         ];
         if (isKeyTrue ($is_result, $is_key)) return $is_result[$is_key];
@@ -262,20 +257,22 @@
 
     function getFileArray (array $is_input = []): array {
         $is_proper = setProperFileArray ($is_input);
-        return array_values (array_filter (scandir (setDir ($is_proper['dir'])), function ($is_index) use ($is_proper) {
-            if (isKeyTrue (pathinfo ($is_index), 'extension'))
-                if (isTrue (pathinfo ($is_index)['extension'] === $is_proper['dir']))
-                    if (!in_array (substr ($is_index, 0, 1), [ '_' ]))
-                        if (isString ($is_proper['search'])):
-                            if (str_contains ($is_index, $is_proper['search'])):
-                                if (getFileContent ($is_index)):
-                                    return $is_index;
-                                endif;
+        $is_array = [];
+        foreach (array_diff (scandir (setDir ($is_proper['dir'])), [ '.', '..' ]) as $is_index)
+            if (isTrue (pathinfo ($is_index)['extension'] === $is_proper['dir']))
+                if (!in_array (substr ($is_index, 0, 1), [ '_' ]))
+                    if (isString ($is_proper['search'])):
+                        if (str_contains ($is_index, $is_proper['search'])):
+                            if (getFileContent ($is_index)):
+                                $is_array[] = implode ('/', [ '.', $is_proper['dir'], $is_index ]);
+                                // $is_array[] = $is_index;
                             endif;
-                        elseif (getFileContent ($is_index)):
-                            return $is_index;
                         endif;
-        }));
+                    elseif (getFileContent ($is_index)):
+                        $is_array[] = implode ('/', [ '.', $is_proper['dir'], $is_index ]);
+                        // $is_array[] = $is_index;
+                    endif;
+        return $is_array;
     };
 
     function setObject2Array (array|object $is_input = []): array {
@@ -374,76 +371,47 @@
         return floatval (preg_replace ($is_pattern, '', $is_input));
     };
 
-    function setDecimalRange (float $is_end = 10): array {
+    function setDecimalRange (float $is_end = 100): array {
         $is_array = [];
         for ($i = 0; $i <= $is_end; $i += .1) $is_array[] = round ($i, 2);
         return $is_array;
     };
 
-    function setHexInvert ($hexCor) {
-        $hexCor = ltrim ($hexCor, '#');
-        if (!preg_match ('/^[0-9a-fA-F]{3}$/', $hexCor) && !preg_match ('/^[0-9a-fA-F]{6}$/', $hexCor)) return false;
-        $len = strlen ($hexCor);
-        $novaCor = '';
-        if ($len === 3) {
-            for ($i = 0; $i < $len; $i++) {
-                $valorHex = str_repeat ($hexCor[$i], 2);
-                $valorDecimal = hexdec ($valorHex);
-                $valorInvertidoDecimal = 255 - $valorDecimal;
-                $novaCor .= str_pad (dechex ($valorInvertidoDecimal), 2, '0', STR_PAD_LEFT);
-            }
-        } else {
-            for ($i = 0; $i < $len; $i += 2) {
-                $valorHex = substr($hexCor, $i, 2);
-                $valorDecimal = hexdec($valorHex);
-                $valorInvertidoDecimal = 255 - $valorDecimal;
-                $novaCor .= str_pad(dechex($valorInvertidoDecimal), 2, '0', STR_PAD_LEFT);
-            };
-        };
-        return '#' . strtoupper ($novaCor);
+    function setHexInvert (string $is_input = ''): bool|string {
+        $is_input = ltrim ($is_input, '#');
+        if (!preg_match ('/^[0-9a-fA-F]{3}$/', $is_input) && !preg_match ('/^[0-9a-fA-F]{6}$/', $is_input)) return false;
+        $is_len = strlen ($is_input);
+        $is_new_color = '';
+        if ($is_len === 3):
+            for ($i = 0; $i < $is_len; $i++):
+                $is_hex = str_repeat ($is_input[$i], 2);
+                $is_decimal = hexdec ($is_hex);
+                $is_invert = 255 - $is_decimal;
+                $is_new_color .= str_pad (dechex ($is_invert), 2, '0', STR_PAD_LEFT);
+            endfor;
+        else:
+            for ($i = 0; $i < $is_len; $i += 2):
+                $is_hex = substr ($is_input, $i, 2);
+                $is_decimal = hexdec ($is_hex);
+                $is_invert = 255 - $is_decimal;
+                $is_new_color .= str_pad (dechex ($is_invert), 2, '0', STR_PAD_LEFT);
+            endfor;
+        endif;
+        return strtoupper (implode ('', [ '#', $is_new_color ]));
     };
 
     function inArray (string $is_input = '', array|string $is_array = '', array|string $is_return = ''): array|string {
         return in_array ($is_input, setArray ($is_array)) ? $is_input : $is_return;
     };
 
-    function setSlideShow (string $is_input = 'jpg', string $is_theme = 'photo'): array {
-        $is_array = [];
+    function setSlideShow (string $is_input = 'jpg'): array {
         $is_set = 'slide';
-        foreach (array_diff (scandir ($is_input), [ '.', '..' ]) as $is_index)
-            if (in_array (strtolower (pathinfo ($is_index)['extension']), defineExtensionPicture))
-                $is_array[] = implode ('/', [ '.', ...explode ('/', $is_input), $is_index ]);
-        $is_proper = [
-            
-            'arrow-bg-color' => '#292a2c',
-            'arrow-bg-hover' => '#f00',
-            'arrow-border-active' => true,
-            'arrow-border-color' => '#292a2c',
-            'arrow-border-hover' => '#f00',
-            'arrow-border-size' => '.5rem',
-            'arrow-font-size' => '1.25rem',
-            'arrow-position' => 'middle',
-            'arrow-size' => '2rem',
-
-            'dot-bg-color' => '#fff',
-            'dot-bg-hover' => '#f00',
-            'dot-border-active' => true,
-            'dot-border-color' => '#fff',
-            'dot-border-hover' => '#f00',
-            'dot-border-size' => '.5rem',
-            'dot-gap' => '1.5rem',
-            'dot-size' => '.5rem',
-
-            'img-border-color' => '#fff',
-
-            'theme-ease' => 'all 0.35s ease-in-out',
-            'theme-margin' => '1rem',
-            'theme' => inArray ($is_theme, [ 'photo', 'slide' ]),
-
-        ];
-        $is_proper['arrow-position'] = inArray ($is_proper['arrow-position'], [ 'bottom', 'middle', 'top' ], 'middle');
-        if (getNumber ($is_proper['arrow-font-size']) > getNumber ($is_proper['arrow-size']))
-            $is_proper['arrow-font-size'] = $is_proper['arrow-size'];
+        $is_array = getFileArray ([ 'dir' => $is_input ]);
+        $is_proper = configSlideshow;
+        $is_proper['arrow']['position'] = inArray ($is_proper['arrow']['position'], [ 'bottom', 'middle', 'top' ], 'middle');
+        $is_proper['theme']['type'] = inArray ($is_proper['theme']['type'], [ 'photo', 'slide' ], 'photo');
+        if (getNumber ($is_proper['arrow']['font-size']) > getNumber ($is_proper['arrow']['size'])) $is_proper['arrow']['font-size'] = $is_proper['arrow']['size'];
+        if (getNumber ($is_proper['dot']['border']['size']) > getNumber ($is_proper['theme']['margin'])) $is_proper['dot']['border']['size'] = $is_proper['theme']['margin'];
         return [
             '<div',
                 ...setClass ([ setFileName ([ $is_set, 'wrapper' ]) ]),
@@ -468,26 +436,27 @@
                                 'opacity' => !$k ? 1 : 0,
                                 'position' => 'absolute',
                                 'top' => 0,
-                                'transition' => $is_proper['theme-ease'],
+                                'transition' => $is_proper['theme']['ease'],
                                 'width' => '100%',
                                 'z-index' => 1,
                             ]),
                         '>',
-                            ...in_array ($is_proper['theme'], [ 'photo' ]) ? [
+                            ...in_array ($is_proper['theme']['type'], [ 'photo' ]) ? [
                                 '<img',
                                     ' src=\'' . $i . '\'',
                                     ...setClass ([ setFileName ([ $is_set, 'photo' ]) ]),
                                     ...setStyle ([
                                         'align-self' => 'center',
-                                        'height' => 'calc(100% - (' . $is_proper['theme-margin'] . ' * 2 + ' . $is_proper['dot-size'] . ') * 2)',
+                                        'height' => 'calc(100% - (' . $is_proper['theme']['margin'] . ' * 2 + ' . $is_proper['dot']['size'] . ') * 2)',
                                         'z-index' => 2,
-                                        'border' => 'solid 1px ' . $is_proper['img-border-color'],
+                                        'border' => 'solid 1px ' . $is_proper['img']['border']['color'],
                                     ]),
                                 '>',
                                 '<div',
                                     ...setClass ([ setFileName ([ $is_set, 'filter' ]) ]),
                                     ...setStyle ([
-                                        ...getStyle ('filter-blur', 7.5),
+                                        ...getStyle ('filter-blur', 25),
+                                        'background-color' => 'rgba(0, 0, 0, .25)',
                                         'height' => '100%',
                                         'left' => 0,
                                         'position' => 'absolute',
@@ -507,15 +476,15 @@
                         '<div',
                             ...setClass (setFileName ([ $is_set, 'arrow', $i ])),
                             ...setStyle ([
-                                ...in_array ($is_proper['arrow-position'], [ 'bottom' ]) ? [ 'bottom' => $is_proper['theme-margin'] ] : [],
-                                ...in_array ($is_proper['arrow-position'], [ 'middle' ]) ? [ 'top' => 'calc((100% - ' . $is_proper['arrow-size'] . ') / 2)' ] : [],
-                                ...in_array ($is_proper['arrow-position'], [ 'top' ]) ? [ 'top' => $is_proper['theme-margin'] ] : [],
+                                ...in_array ($is_proper['arrow']['position'], [ 'bottom' ]) ? [ 'bottom' => $is_proper['theme']['margin'] ] : [],
+                                ...in_array ($is_proper['arrow']['position'], [ 'middle' ]) ? [ 'top' => 'calc((100% - ' . $is_proper['arrow']['size'] . ') / 2)' ] : [],
+                                ...in_array ($is_proper['arrow']['position'], [ 'top' ]) ? [ 'top' => $is_proper['theme']['margin'] ] : [],
                                 ...getStyle ('display-flex'),
-                                $i => $is_proper['theme-margin'],
+                                $i => $is_proper['theme']['margin'],
                                 'cursor' => 'pointer',
-                                'height' => $is_proper['arrow-size'],
+                                'height' => $is_proper['arrow']['size'],
                                 'position' => 'absolute',
-                                'width' => $is_proper['arrow-size'],
+                                'width' => $is_proper['arrow']['size'],
                                 'z-index' => 2,
                             ]),
                         '>',
@@ -523,8 +492,8 @@
                                 ...setClass (setFileName ([ $is_set, 'arrow', 'wrapper' ])),
                                 ...setStyle ([
                                     ...getStyle ('display-flex'),
-                                    ...getStyle ('circle-size', $is_proper['arrow-size']),
-                                    'background-color' => !$k ? $is_proper['arrow-bg-hover'] :  $is_proper['arrow-bg-color'],
+                                    ...getStyle ('circle-size', $is_proper['arrow']['size']),
+                                    'background-color' => !$k ? $is_proper['arrow']['bg']['hover'] :  $is_proper['arrow']['bg']['color'],
                                     'position' => 'absolute',
                                     'z-index' => 2,
                                 ]),
@@ -532,23 +501,23 @@
                                 '<a',
                                     ...setClass (setFileName ([ $is_set, 'arrow' ])),
                                     ...setStyle ([
-                                        'color' => setHexInvert ($is_proper['arrow-bg-color']),
-                                        'font-size' => $is_proper['arrow-font-size'],
+                                        'color' => setHexInvert ($is_proper['arrow']['bg']['color']),
+                                        'font-size' => $is_proper['arrow']['font-size'],
                                         'user-select' => 'none',
                                     ]),
                                 '>',
                                     '<i', ...setClass ([ 'bi', 'fw-bolder', setFileName ([ 'bi', 'caret', $i, 'fill' ]) ]), '>', '</i>',
                                 '</a>',
                             '</div>',
-                            ...isTrue ($is_proper['arrow-border-active']) ? [
+                            ...isTrue ($is_proper['arrow']['border']['active']) ? [
                                 '<div',
                                     ...setClass (setFileName ([ $is_set, 'arrow', 'border' ])),
                                     ...setStyle ([
-                                        ...getStyle ('circle-size', 'calc(' . $is_proper['arrow-size'] . ' + ' . $is_proper['arrow-border-size'] . ' * 2)'),
-                                        'background-color' => !$k ? $is_proper['arrow-border-hover'] :  $is_proper['arrow-border-color'],
+                                        ...getStyle ('circle-size', 'calc(' . $is_proper['arrow']['size'] . ' + ' . $is_proper['arrow']['border']['size'] . ' * 2)'),
+                                        'background-color' => !$k ? $is_proper['arrow']['border']['hover'] :  $is_proper['arrow']['border']['color'],
                                         'opacity' => .25,
                                         'position' => 'absolute',
-                                        'transition' => $is_proper['theme-ease'],
+                                        'transition' => $is_proper['theme']['ease'],
                                         'z-index' => 1,
                                     ]),
                                 '>',
@@ -558,56 +527,70 @@
                         '</div>',
                     ]);
                 }, [ 'left', 'right' ], array_keys ([ 'left', 'right' ])),
-                '<div',
-                    ...setClass (setFileName ([ $is_set, 'dot', 'container' ])),
-                    ...setStyle ([
-                        ...getStyle ('display-flex'),
-                        'bottom' => $is_proper['theme-margin'],
-                        'height' => $is_proper['dot-size'],
-                        'margin-left' => 'auto',
-                        'position' => 'absolute',
-                        'z-index' => 2,
-                    ]),
-                '>',
-                    ...array_map (function ($i, $k) use ($is_array, $is_proper, $is_set) {
-                        return implode ('', [
-                            '<div',
-                                ...setClass (setFileName ([ $is_set, 'dot', 'wrapper' ])),
-                                ...setStyle ([
-                                    ...getStyle ('display-flex'),
-                                    ...$k < count ($is_array) - 1 ? [ 'margin-right' => $is_proper['dot-gap'] ] : [],
-                                    'cursor' => 'pointer',
-                                ]),
-                            '>',
-                                '<div',
-                                    ...setClass (setFileName ([ $is_set, 'dot' ])),
-                                    ...setStyle ([
-                                        ...getStyle ('circle-size', $is_proper['dot-size']),
-                                        'background-color' => !$k ? $is_proper['dot-bg-hover'] : $is_proper['dot-bg-color'],
-                                        'transition' => $is_proper['theme-ease'],
-                                        ...!isTrue ($is_proper['dot-border-active']) ? [ 'z-index' => 2 ] : [],
-                                    ]),
-                                '>',
-                                '</div>',
-                                ...isTrue ($is_proper['dot-border-active']) ? [
+                ...isTrue ($is_proper['dot']['active']) ? [
+                    '<div',
+                        ...setClass (setFileName ([ $is_set, 'dot', 'hidden' ])),
+                        ...setStyle ([
+                            ...getStyle ('display-flex'),
+                            'bottom' => 0,
+                            'height' => 'calc(' . $is_proper['theme']['margin'] . ' * 2 + ' . $is_proper['dot']['size'] . ')',
+                            'overflow' => 'hidden',
+                            'position' => 'absolute',
+                            'width' => '100%',
+                            'z-index' => 2,
+                        ]),
+                    '>',
+                        '<div',
+                            ...setClass (setFileName ([ $is_set, 'dot', 'container' ])),
+                            ...setStyle ([
+                                ...getStyle ('display-flex'),
+                                'height' => $is_proper['dot']['size'],
+                                'margin-left' => 'auto',
+                                'position' => 'absolute',
+                            ]),
+                        '>',
+                            ...array_map (function ($i, $k) use ($is_array, $is_proper, $is_set) {
+                                return implode ('', [
                                     '<div',
-                                        ...setClass (setFileName ([ $is_set, 'dot', 'border' ])),
+                                        ...setClass (setFileName ([ $is_set, 'dot', 'wrapper' ])),
                                         ...setStyle ([
-                                            ...getStyle ('circle-size', 'calc(' . $is_proper['dot-size'] . ' + ' . $is_proper['dot-border-size'] . ' * 2)'),
-                                            'background-color' => !$k ? $is_proper['dot-border-hover'] : $is_proper['dot-border-color'],
-                                            'opacity' => .25,
-                                            'position' => 'absolute',
-                                            'transition' => $is_proper['theme-ease'],
-                                            'z-index' => 1,
+                                            ...getStyle ('display-flex'),
+                                            ...$k < count ($is_array) - 1 ? [ 'margin-right' => $is_proper['dot']['gap'] ] : [],
+                                            'cursor' => 'pointer',
                                         ]),
                                     '>',
+                                        '<div',
+                                            ...setClass (setFileName ([ $is_set, 'dot' ])),
+                                            ...setStyle ([
+                                                ...getStyle ('circle-size', $is_proper['dot']['size']),
+                                                'background-color' => !$k ? $is_proper['dot']['bg']['hover'] : $is_proper['dot']['bg']['color'],
+                                                'transition' => $is_proper['theme']['ease'],
+                                                ...!isTrue ($is_proper['dot']['border']['active']) ? [ 'z-index' => 2 ] : [],
+                                            ]),
+                                        '>',
+                                        '</div>',
+                                        ...isTrue ($is_proper['dot']['border']['active']) ? [
+                                            '<div',
+                                                ...setClass (setFileName ([ $is_set, 'dot', 'border' ])),
+                                                ...setStyle ([
+                                                    ...getStyle ('circle-size', 'calc(' . $is_proper['dot']['size'] . ' + ' . $is_proper['dot']['border']['size'] . ' * 2)'),
+                                                    'background-color' => !$k ? $is_proper['dot']['border']['hover'] : $is_proper['dot']['border']['color'],
+                                                    'opacity' => .25,
+                                                    'position' => 'absolute',
+                                                    'transition' => $is_proper['theme']['ease'],
+                                                    'z-index' => 1,
+                                                ]),
+                                            '>',
+                                            '</div>',
+                                        ] : [
+                                        ],
                                     '</div>',
-                                ] : [
-                                ],
-                            '</div>',
-                        ]);
-                    }, range (0, count ($is_array) - 1), array_keys (range (0, count ($is_array) - 1))),
-                '</div>',
+                                ]);
+                            }, range (0, count ($is_array) - 1), array_keys (range (0, count ($is_array) - 1))),
+                        '</div>',
+                    '</div>',
+                ] : [
+                ],
             '</div>',
         ];
     };
