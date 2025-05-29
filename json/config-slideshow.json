@@ -1,0 +1,34 @@
+{
+    "arrow": {
+        "bg-hover": "#f00",
+        "bg": "#292a2c",
+        "border": {
+            "active": true,
+            "color": "#fff",
+            "size": ".5rem"
+        },
+        "color": "#fff",
+        "font-size": "1rem",
+        "position": "middle",
+        "size": "2rem"
+    },
+    "dot": {
+        "bg-hover": "#f00",
+        "bg": "#fff",
+        "border": {
+            "active": true,
+            "color": "#fff",
+            "size": ".5rem"
+        },
+        "gap": "2rem",
+        "size": ".5rem"
+    },
+    "img": {
+        "color": "#fff"
+    },
+    "theme": {
+        "p-x": "1rem",
+        "p-y": "2.5rem",
+        "ease": "all 0.35s ease-in-out"
+    }
+}
