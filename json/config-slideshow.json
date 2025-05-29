@@ -1,8 +1,5 @@
 {
     "arrow": {
-        "bg": {
-            "color": "#fff"
-        },
         "border": {
             "active": true,
             "size": ".5rem"
@@ -23,13 +20,14 @@
     "img": {
         "border": {
             "active": true,
-            "color": "#fff",
+            "radius": "1rem",
             "size": ".5rem"
         }
     },
     "theme": {
-        "type": "photo",
+        "color": "#f0f",
         "ease": "all 0.35s ease-in-out",
-        "margin": "1rem"
+        "margin": "1rem",
+        "type": "photo"
     }
 }

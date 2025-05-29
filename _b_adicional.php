@@ -1,8 +1,53 @@
 <?php
 
+    function isBoxShadow (string $is_input = ''): bool {
+        $is_pattern = '/^';
+            for ($i = 0; $i < 4; $i++):
+                $is_pattern .= '(0|\d+px)';
+                $is_pattern .= '\s';
+            endfor;
+            $is_pattern .= 'rgba\(';
+                for ($i = 0; $i < 3; $i++):
+                    $is_pattern .= '\d+';
+                    $is_pattern .= ',';
+                    $is_pattern .= '\s';
+                endfor;
+                $is_pattern .= '(';
+                    $is_pattern .= '0|0?\.\d+|1(\.0*)?';
+                $is_pattern .= ')';
+            $is_pattern .= '\)';
+        $is_pattern .= '$/';
+        return preg_match ($is_pattern, $is_input);
+    };
+
+    function isTextShadow (string $is_input = ''): bool {
+        $is_pattern = '/^';
+            for ($i = 0; $i < 3; $i++):
+                $is_pattern .= '(0|\d+px)';
+                $is_pattern .= '\s';
+            endfor;
+            $is_pattern .= 'rgba\(';
+                for ($i = 0; $i < 3; $i++):
+                    $is_pattern .= '\d+';
+                    $is_pattern .= ',';
+                    $is_pattern .= '\s';
+                endfor;
+                $is_pattern .= '(';
+                    $is_pattern .= '0|0?\.\d+|1(\.0*)?';
+                $is_pattern .= ')';
+            $is_pattern .= '\)';
+        $is_pattern .= '$/';
+        return preg_match ($is_pattern, $is_input);
+    };
+
     function getStyle (string $is_key = '', float|string $is_input = ''): array {
         $is_result = [
-            'text-shadow' => [ 'text-shadow' => '0 1.5px 3px rgba(0, 0, 0, .75)' ],
+            ...isTextShadow ($is_input) ? [
+                '-webkit-text-shadow' => $is_input,
+                '-moz-text-shadow' =>$is_input,
+                'text-shadow' => $is_input,
+            ] : [
+            ],
             'background-image' => [
                 ...file_exists ($is_input) ? [
                     'background-attachment' => 'scroll',
@@ -28,9 +73,17 @@
                 'display' => 'flex',
                 'justify-content' => inArray ($is_input, [ 'start', 'end', 'center', 'space-between', 'space-around', 'space-evenly' ], 'center'),
             ],
-            'filter-blur' => [
-                '-webkit-backdrop-filter' => 'blur(' . (in_array ($is_input, setDecimalRange (100)) ? $is_input : 5) . 'px)',
-                'backdrop-filter' => 'blur(' . (in_array ($is_input, setDecimalRange (100)) ? $is_input : 5) . 'px)',
+            'backdrop-filter-blur' => [
+                '-webkit-backdrop-filter' => 'blur(' . (in_array ($is_input, setDecimalRange (100)) ? $is_input : 25) . 'px)',
+                'backdrop-filter' => 'blur(' . (in_array ($is_input, setDecimalRange (100)) ? $is_input : 25) . 'px)',
+            ],
+            'box-shadow' => [
+                ...isBoxShadow ($is_input) ? [
+                    '-webkit-box-shadow' => $is_input,
+                    '-moz-box-shadow' =>$is_input,
+                    'box-shadow' => $is_input,
+                ] : [
+                ],
             ],
         ];
         if (isKeyTrue ($is_result, $is_key)) return $is_result[$is_key];
