@@ -1,6 +1,10 @@
 <?php
 
-    foreach ([ 'config', 'define' ] as $is_archive):
+    foreach ([
+        'catalog', 
+        'config',
+        'define',
+    ] as $is_archive):
         foreach (getFileArray ([ 'search' => $is_archive ]) as $is_index):
             $is_index = pathinfo ($is_index);
             define (setTargetName (explode ('-', $is_index['filename'])), setJson2Array ($is_index['basename']));
@@ -400,18 +404,75 @@
         return strtoupper (implode ('', [ '#', $is_new_color ]));
     };
 
+    function isValidHex (string $is_input = ''): bool {
+        $is_input = ltrim ($is_input, '#');
+        return preg_match ('/^[0-9a-fA-F]{3}$/', $is_input) || preg_match ('/^[0-9a-fA-F]{6}$/', $is_input);
+    };
+
     function inArray (string $is_input = '', array|string $is_array = '', array|string $is_return = ''): array|string {
         return in_array ($is_input, setArray ($is_array)) ? $is_input : $is_return;
     };
 
+    function getINDEX (array $is_input = [], string $is_key = 'container'): array {
+        $is_array = [];
+        if (isArray ($is_input))
+            for ($i = 0; $i < sizeof ($is_input); $i++)
+                if (isKeyTrue ($is_input[$i], $is_key))
+                    for ($j = 0; $j < sizeof ($is_input[$i][$is_key]); $j++)
+                        if (isKeyTrue ($is_input[$i][$is_key][$j], $is_key))
+                            for ($k = 0; $k < sizeof ($is_input[$i][$is_key][$j][$is_key]); $k++)
+                                array_push ($is_array, $is_input[$i][$is_key][$j][$is_key][$k]);
+        shuffle ($is_array);
+        return $is_array;
+    };
+
+    function getPictureRandom (array|string $is_input = ''): string {
+        return getRandom (hasValidPath (setArray ($is_input)));
+    };
+
+    function hasValidPath (array|string $is_input = ''): array {
+        return isArray (setArray ($is_input)) ? array_values (array_map (function ($is_index) {
+            if (isPathExist ($is_index)) return isPathExist ($is_index);
+            if (isURLExist ($is_index)) return isURLExist ($is_index);
+        }, setArray ($is_input))) : [];
+    };
+
+    function isKeyHasValidPath (array $is_input = [], string $is_key = ''): array {
+        return isKeyTrue ($is_input, $is_key) ? hasValidPath ($is_input[$is_key]) : [];
+    };
+
+    function isURLMPago (string $is_input = ''): bool {
+        return preg_match ('/^https:\/\/mpago\.la\/[a-zA-Z0-9]+$/', $is_input);
+    };
+
+    function isURLExist (string $is_input = ''): bool|string {
+        if (!isURL ($is_input)) return false;
+        $ch = curl_init ();
+        curl_setopt ($ch, CURLOPT_URL, $is_input);
+        curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, true);
+        $html = curl_exec ($ch);
+        $is_http = curl_getinfo ($ch, CURLINFO_HTTP_CODE);
+        curl_close ($ch);
+        return $is_http === 200 ? $is_input : false;
+    };
+
+    function getRandom (array $is_input = []): string {
+        return $is_input[array_rand ($is_input)];
+    };
+
     function setSlideShow (string $is_input = 'jpg'): array {
         $is_set = 'slide';
-        $is_array = getFileArray ([ 'dir' => $is_input ]);
+        $is_array = getINDEX (catalogContent, 'container');
+        // $is_array = getFileArray ([ 'dir' => $is_input ]);
         $is_proper = configSlideshow;
         $is_proper['arrow']['position'] = inArray ($is_proper['arrow']['position'], [ 'bottom', 'middle', 'top' ], 'middle');
         $is_proper['theme']['type'] = inArray ($is_proper['theme']['type'], [ 'photo', 'slide' ], 'photo');
-        if (getNumber ($is_proper['arrow']['font-size']) > getNumber ($is_proper['arrow']['size'])) $is_proper['arrow']['font-size'] = $is_proper['arrow']['size'];
-        if (getNumber ($is_proper['dot']['border']['size']) > getNumber ($is_proper['theme']['margin'])) $is_proper['dot']['border']['size'] = $is_proper['theme']['margin'];
+        if (getNumber ($is_proper['arrow']['font-size']) > getNumber ($is_proper['arrow']['size']))
+            $is_proper['arrow']['font-size'] = $is_proper['arrow']['size'];
+        if (getNumber ($is_proper['dot']['border']['size']) > getNumber ($is_proper['theme']['margin']))
+            $is_proper['dot']['border']['size'] = $is_proper['theme']['margin'];
+        $is_proper['arrow']['bg']['color'] = isValidHex ($is_proper['arrow']['bg']['color']) ? $is_proper['arrow']['bg']['color'] : '#fff';
         return [
             '<div',
                 ...setClass ([ setFileName ([ $is_set, 'wrapper' ]) ]),
@@ -424,11 +485,13 @@
                 ]),
             '>',
                 ...array_map (function ($i, $k) use ($is_proper, $is_set) {
+                    // $is_index = $i;
+                    $is_index = getPictureRandom (isKeyHasValidPath ($i, 'gallery'));
                     return implode ('', [
                         '<div',
                             ...setClass ([ setFileName ([ $is_set, 'content' ]) ]),
                             ...setStyle ([
-                                ...getStyle ('background-image', $i),
+                                ...getStyle ('background-image', $is_index),
                                 'display' => !$k ? 'flex' : 'none',
                                 'height' => '100%',
                                 'justify-content' => 'center',
@@ -443,7 +506,7 @@
                         '>',
                             ...in_array ($is_proper['theme']['type'], [ 'photo' ]) ? [
                                 '<img',
-                                    ' src=\'' . $i . '\'',
+                                    ' src=\'' . $is_index . '\'',
                                     ...setClass ([ setFileName ([ $is_set, 'photo' ]) ]),
                                     ...setStyle ([
                                         'align-self' => 'center',
@@ -456,7 +519,7 @@
                                     ...setClass ([ setFileName ([ $is_set, 'filter' ]) ]),
                                     ...setStyle ([
                                         ...getStyle ('filter-blur', 25),
-                                        'background-color' => 'rgba(0, 0, 0, .25)',
+                                        'background-color' => 'rgba(0, 0, 0, .5)',
                                         'height' => '100%',
                                         'left' => 0,
                                         'position' => 'absolute',
@@ -493,7 +556,7 @@
                                 ...setStyle ([
                                     ...getStyle ('display-flex'),
                                     ...getStyle ('circle-size', $is_proper['arrow']['size']),
-                                    'background-color' => !$k ? $is_proper['arrow']['bg']['hover'] :  $is_proper['arrow']['bg']['color'],
+                                    'background-color' => !$k ? setHexInvert ($is_proper['arrow']['bg']['color']) :  $is_proper['arrow']['bg']['color'],
                                     'position' => 'absolute',
                                     'z-index' => 2,
                                 ]),
@@ -501,7 +564,7 @@
                                 '<a',
                                     ...setClass (setFileName ([ $is_set, 'arrow' ])),
                                     ...setStyle ([
-                                        'color' => setHexInvert ($is_proper['arrow']['bg']['color']),
+                                        'color' => !$k ? $is_proper['arrow']['bg']['color'] :  setHexInvert ($is_proper['arrow']['bg']['color']),
                                         'font-size' => $is_proper['arrow']['font-size'],
                                         'user-select' => 'none',
                                     ]),
@@ -514,7 +577,7 @@
                                     ...setClass (setFileName ([ $is_set, 'arrow', 'border' ])),
                                     ...setStyle ([
                                         ...getStyle ('circle-size', 'calc(' . $is_proper['arrow']['size'] . ' + ' . $is_proper['arrow']['border']['size'] . ' * 2)'),
-                                        'background-color' => !$k ? $is_proper['arrow']['border']['hover'] :  $is_proper['arrow']['border']['color'],
+                                        'background-color' => !$k ? setHexInvert ($is_proper['arrow']['bg']['color']) :  $is_proper['arrow']['bg']['color'],
                                         'opacity' => .25,
                                         'position' => 'absolute',
                                         'transition' => $is_proper['theme']['ease'],
@@ -563,7 +626,7 @@
                                             ...setClass (setFileName ([ $is_set, 'dot' ])),
                                             ...setStyle ([
                                                 ...getStyle ('circle-size', $is_proper['dot']['size']),
-                                                'background-color' => !$k ? $is_proper['dot']['bg']['hover'] : $is_proper['dot']['bg']['color'],
+                                                'background-color' => !$k ? setHexInvert ($is_proper['arrow']['bg']['color']) : $is_proper['arrow']['bg']['color'],
                                                 'transition' => $is_proper['theme']['ease'],
                                                 ...!isTrue ($is_proper['dot']['border']['active']) ? [ 'z-index' => 2 ] : [],
                                             ]),
@@ -574,7 +637,7 @@
                                                 ...setClass (setFileName ([ $is_set, 'dot', 'border' ])),
                                                 ...setStyle ([
                                                     ...getStyle ('circle-size', 'calc(' . $is_proper['dot']['size'] . ' + ' . $is_proper['dot']['border']['size'] . ' * 2)'),
-                                                    'background-color' => !$k ? $is_proper['dot']['border']['hover'] : $is_proper['dot']['border']['color'],
+                                                    'background-color' => !$k ? setHexInvert ($is_proper['arrow']['bg']['color']) : $is_proper['arrow']['bg']['color'],
                                                     'opacity' => .25,
                                                     'position' => 'absolute',
                                                     'transition' => $is_proper['theme']['ease'],

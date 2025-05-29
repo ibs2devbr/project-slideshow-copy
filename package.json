@@ -14,12 +14,9 @@
   "license": "ISC",
   "description": "## _Histórico_",
   "devDependencies": {
-    "clean-css": "^5.3.3",
     "concurrently": "^9.1.2",
     "cssnano": "^7.0.7",
-    "nano": "^10.1.4",
     "nodemon": "^3.1.10",
-    "postcss": "^8.5.3",
     "sass": "^1.89.0"
   },
   "dependencies": {
