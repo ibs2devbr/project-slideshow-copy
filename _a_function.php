@@ -280,10 +280,12 @@
     };
 
     function setStyle (array $is_input = []): array {
-        if (!array_is_list ($is_input))
+        if (!array_is_list ($is_input)):
+            $is_input = setSortKey ($is_input);
             return setAttrib (implode (' ', array_map (function ($is_index) use ($is_input) {
                 return implode ('', [ $is_index, ': ', $is_input[$is_index], ';' ]);
             }, array_keys ($is_input))), 'style');
+        endif;
         return [];
     };
 

@@ -29,7 +29,11 @@
                 ...array_map (function ($i, $k) use ($is_proper, $is_set) {
                     // $is_picture = $i;
                     $is_picture = getPictureRandom (isKeyHasValidPath ($i, 'gallery'));
-                    $is_headline = getHeadlineTemplate ([ 'content' => $i, 'heading' => 3 ]);
+                    $is_headline = getHeadlineTemplate ([
+                        'content' => $i,
+                        'heading' => 3,
+                        'style' => [ 'color' => $is_proper['theme']['color'] ],
+                    ]);
                     $is_photo = in_array ($is_proper['theme']['type'], [ 'photo' ]);
                     return implode ('', [
                         '<div',
@@ -63,17 +67,30 @@
                                 '>',
                             ] : [
                             ],
-                            '<div',
-                                ...setClass ([ setFileName ([ $is_set, 'headline' ]) ]),
-                                ...setStyle ([
-                                    'left' => $is_proper['theme']['margin'],
-                                    'position' => 'absolute',
-                                    'top' => $is_proper['theme']['margin'],
-                                    'z-index' => 2,
-                                ]),
-                            '>',
-                                ...$is_headline,
-                            '</div>',
+                            ...isTrue ($is_headline) ? [
+                                '<div',
+                                    ...setStyle ([
+                                        'left' => $is_proper['theme']['margin'],
+                                        'position' => 'absolute',
+                                        'top' => $is_proper['theme']['margin'],
+                                        'width' => 'calc(100% - ' . $is_proper['theme']['margin'] . ' * 2)',
+                                        'z-index' => 2,
+                                    ]),
+                                '>',
+                                    '<div', ...setClass ([ 'col-4', 'd-none', 'd-lg-flex' ]), '>',
+                                        '<div',
+                                            ...setClass ([ 'd-lg-inline-block', setFileName ([ $is_set, 'headline' ]) ]),
+                                            ...setStyle ([
+                                                'background-color' => setHexInvert ($is_proper['theme']['color']),
+                                                'padding' => $is_proper['theme']['margin'],
+                                            ]),
+                                        '>',
+                                            ...$is_headline,
+                                        '</div>',
+                                    '</div>',
+                                '</div>',
+                            ] : [
+                            ],
                             ...isTrue ($is_photo) ? [
                                 '<div',
                                     ...setClass ([ setFileName ([ $is_set, 'filter' ]) ]),

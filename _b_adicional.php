@@ -185,4 +185,13 @@
         return $is_input[array_rand ($is_input)];
     };
 
+    function setSortKey (array $is_input = []): array {
+        $is_key = array_keys ($is_input);
+        sort ($is_key);
+        $is_array = [];
+        foreach ($is_key as $is_index)
+            $is_array[$is_index] = $is_input[$is_index];
+        return $is_array;
+    };
+
 ?>

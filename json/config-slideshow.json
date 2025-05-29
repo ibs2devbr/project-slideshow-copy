@@ -25,9 +25,9 @@
         }
     },
     "theme": {
-        "color": "#f0f",
+        "color": "#fff",
         "ease": "all 0.35s ease-in-out",
         "margin": "1rem",
-        "type": "photo"
+        "type": "slide"
     }
 }
