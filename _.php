@@ -11,7 +11,7 @@
     ]);
 
     define ('defineBodyContent', [
-        ...setSlideShow (),
+        ...setSlideshow ('jpg'),
     ]);
 
     define ('defineFloatContent', [

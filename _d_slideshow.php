@@ -1,6 +1,6 @@
 <?php
 
-    function setSlideShow (string $is_input = 'jpg'): array {
+    function setSlideshow (string $is_input = 'jpg'): array {
         $is_set = 'slide';
         $is_array = getINDEX (catalogContent, 'container');
         // $is_array = getFileArray ([ 'dir' => $is_input ]);
@@ -19,18 +19,22 @@
                     'display' => 'flex',
                     'height' => '100%',
                     'justify-content' => 'center',
-                    'position' => 'relative',
+                    'left' => 0,
+                    'position' => 'absolute',
+                    'top' => 0,
                     'width' => '100%',
+                    'z-index' => 0,
                 ]),
             '>',
                 ...array_map (function ($i, $k) use ($is_proper, $is_set) {
-                    // $is_index = $i;
-                    $is_index = getPictureRandom (isKeyHasValidPath ($i, 'gallery'));
+                    // $is_picture = $i;
+                    $is_picture = getPictureRandom (isKeyHasValidPath ($i, 'gallery'));
+                    $is_headline = getHeadlineTemplate ([ 'align' => 'start', 'content' => $i, 'heading' => 3 ]);
                     return implode ('', [
                         '<div',
                             ...setClass ([ setFileName ([ $is_set, 'content' ]) ]),
                             ...setStyle ([
-                                ...getStyle ('background-image', $is_index),
+                                ...getStyle ('background-image', $is_picture),
                                 'display' => !$k ? 'flex' : 'none',
                                 'height' => '100%',
                                 'justify-content' => 'center',
@@ -45,7 +49,7 @@
                         '>',
                             ...in_array ($is_proper['theme']['type'], [ 'photo' ]) ? [
                                 '<img',
-                                    ' src=\'' . $is_index . '\'',
+                                    ' src=\'' . $is_picture . '\'',
                                     ...setClass ([ setFileName ([ $is_set, 'photo' ]) ]),
                                     ...setStyle ([
                                         'align-self' => 'center',

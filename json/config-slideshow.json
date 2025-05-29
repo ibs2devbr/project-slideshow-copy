@@ -1,14 +1,14 @@
 {
     "arrow": {
         "bg": {
-            "color": "#f00"
+            "color": "#fff"
         },
         "border": {
             "active": true,
             "size": ".5rem"
         },
         "font-size": "1.25rem",
-        "position": "bottom",
+        "position": "middle",
         "size": "2rem"
     },
     "dot": {
@@ -28,7 +28,7 @@
         }
     },
     "theme": {
-        "type": "slide",
+        "type": "photo",
         "ease": "all 0.35s ease-in-out",
         "margin": "1rem"
     }
