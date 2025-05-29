@@ -2,12 +2,16 @@
 
     include_once ('function.php');
 
+    $is_array = [];
+    foreach (scandir ('./') as $is_index)
+        if (preg_match ('/^_[a-z_-]*\.php$/', $is_index))
+            $is_array[] = $is_index;
+
     $is_number = 0;
     if (file_exists (defineServer['html-file'])):
-        $is_html = getFileDateTime (defineServer['html-file']);
-        foreach ([ ...getPathArray ([ 'dir' => 'json' ]), ...defineServer['php-file-array'] ] as $is_index):
-            $is_file = getFileDateTime ($is_index);
-            if ($is_file > $is_html)
+        $is_html_datetime = getFileDateTime (defineServer['html-file']);
+        foreach ([ ...getPathArray ([ 'dir' => 'json' ]), ...$is_array ] as $is_index):
+            if (getFileDateTime ($is_index) > $is_html_datetime)
                 $is_number++;
         endforeach;
     else:

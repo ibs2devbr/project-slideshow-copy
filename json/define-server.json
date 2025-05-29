@@ -1,8 +1,4 @@
 {
     "html-file": "_.html",
-    "php-file": "_.php",
-    "php-file-array": [
-        "_function.php",
-        "_.php"
-    ]
+    "php-file": "_.php"
 }

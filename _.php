@@ -1,6 +1,8 @@
 <?php
 
-    include_once ('_function.php');
+    foreach (scandir ('./') as $is_index)
+        if (preg_match ('/^_[a-z]{1}_[a-z-]*\.php$/', $is_index))
+            include_once ($is_index);
 
     define ('defineMainContent', [
     ]);
@@ -10,8 +12,6 @@
 
     define ('defineBodyContent', [
         ...setSlideShow (),
-        // ...setSELETOR (defineMainContent, [ 'wrap' => 'main' ]),
-        // ...setSELETOR (defineFooterContent, [ 'wrap' => 'footer' ]),
     ]);
 
     define ('defineFloatContent', [
