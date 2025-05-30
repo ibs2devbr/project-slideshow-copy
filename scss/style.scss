@@ -13,6 +13,8 @@ $color-danger: variable.$color-danger;
 
 @use 'palette.scss';
 
+@use 'project.scss';
+
 @use 'scrollbar.scss';
 
 @use 'selector.scss';

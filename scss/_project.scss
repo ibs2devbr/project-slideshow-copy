@@ -1,0 +1,26 @@
+$screen-dimension: (
+    'sm' : 576px,
+    'md' : 768px,
+    'lg' : 992px,
+    'xl' : 1200px,
+    'xxl' : 1400px,
+);
+
+@media (min-width: 992px) {
+    @for $i from 1 through 12 {
+        @each $screen-key, $screen-value in $screen-dimension {
+            .h-#{$screen-key}-#{$i} {
+                height: 100px;
+            }
+        }
+    }
+
+    // .h-lg-9 {
+    //     height: 100%;
+    // }
+    // .h-sm-1 {}
+    // .h-md-1 {}
+    // .h-lg-1 {}
+    // .h-xl-1 {}
+    // .h-xxl-1 {}
+}

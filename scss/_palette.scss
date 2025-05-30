@@ -21,7 +21,7 @@ $color-theme: (
   'green' : #198754,
   'teal' : #20c997,
   'cyan' : #0dcaf0,
-  'gray' : #adb5bd
+  'gray' : #adb5bd,
 );
 
 @each $color-key, $color-value in $color-theme {
