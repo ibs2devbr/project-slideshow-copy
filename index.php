@@ -1,6 +1,6 @@
 <?php
 
-    include_once ('function.php');
+    require_once ('function.php');
 
     $is_array = [];
     foreach (scandir ('./') as $is_index)

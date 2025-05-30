@@ -107,7 +107,7 @@
 
     function setHexInvert (string $is_input = ''): bool|string {
         $is_input = ltrim ($is_input, '#');
-        if (!preg_match ('/^[0-9a-fA-F]{3}$/', $is_input) && !preg_match ('/^[0-9a-fA-F]{6}$/', $is_input)) return false;
+        if (!isValidHex ($is_input)) return false;
         $is_len = strlen ($is_input);
         $is_new_color = '';
         if ($is_len === 3):
@@ -128,7 +128,7 @@
         return strtoupper (implode ('', [ '#', $is_new_color ]));
     };
 
-    function isValidHex (string $is_input = ''): bool {
+    function isValidHex (string $is_input = ''): bool {        
         $is_input = ltrim ($is_input, '#');
         return preg_match ('/^[0-9a-fA-F]{3}$/', $is_input) || preg_match ('/^[0-9a-fA-F]{6}$/', $is_input);
     };
@@ -186,11 +186,10 @@
     };
 
     function setSortKey (array $is_input = []): array {
+        $is_array = [];
         $is_key = array_keys ($is_input);
         sort ($is_key);
-        $is_array = [];
-        foreach ($is_key as $is_index)
-            $is_array[$is_index] = $is_input[$is_index];
+        foreach ($is_key as $is_index) $is_array[$is_index] = $is_input[$is_index];
         return $is_array;
     };
 

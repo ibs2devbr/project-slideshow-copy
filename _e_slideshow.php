@@ -2,8 +2,8 @@
 
     function setSlideshow (string $is_input = 'jpg'): array {
         $is_set = 'slide';
-        $is_array = getINDEX (catalogContent, 'container');
-        // $is_array = getFileArray ([ 'dir' => $is_input ]);
+        // $is_array = getINDEX (catalogContent, 'container');
+        $is_array = getFileArray ([ 'dir' => $is_input ]);
         $is_proper = configSlideshow;
         $is_proper['arrow']['position'] = inArray ($is_proper['arrow']['position'], [ 'bottom', 'middle', 'top' ], 'middle');
         $is_proper['theme']['type'] = inArray ($is_proper['theme']['type'], [ 'photo', 'slide' ], 'photo');
@@ -33,13 +33,17 @@
 
 
                 ...array_map (function ($i, $k) use ($is_proper, $is_set) {
-                    // $is_picture = $i;
-                    $is_picture = getPictureRandom (isKeyHasValidPath ($i, 'gallery'));
-                    $is_headline = getHeadlineTemplate ([
-                        'content' => $i,
-                        'heading' => 3,
-                        'style' => [ 'color' => $is_proper['theme']['color'] ],
-                    ]);
+
+                    $is_picture = $i;
+
+                    // $is_picture = getPictureRandom (isKeyHasValidPath ($i, 'gallery'));
+
+                    // $is_headline = getHeadlineTemplate ([
+                    //     'content' => $i,
+                    //     'heading' => 3,
+                    //     'style' => [ 'color' => $is_proper['theme']['color'] ],
+                    // ]);
+
                     $is_photo = in_array ($is_proper['theme']['type'], [ 'photo' ]);
                     return implode ('', [
                         '<div',

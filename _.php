@@ -2,7 +2,7 @@
 
     foreach (scandir ('./') as $is_index)
         if (preg_match ('/^_[a-z]{1}_[a-z-]*\.php$/', $is_index))
-            include_once ($is_index);
+            require_once ($is_index);
 
     define ('defineMainContent', [
     ]);
