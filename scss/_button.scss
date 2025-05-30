@@ -1,3 +1,13 @@
+@use 'variable';
+
+$color-black: variable.$color-black;
+$color-white: variable.$color-white;
+$color-dark: variable.$color-dark;
+$color-light: variable.$color-light;
+$color-info: variable.$color-info;
+$color-danger: variable.$color-danger;
+
+
 .btn-dark {
     --bs-btn-color: #{ $color-white };
     --bs-btn-bg: #{ $color-black };

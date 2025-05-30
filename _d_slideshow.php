@@ -13,6 +13,9 @@
             $is_proper['dot']['border']['size'] = $is_proper['theme']['margin'];
         $is_proper['theme']['color'] = isValidHex ($is_proper['theme']['color']) ? $is_proper['theme']['color'] : '#fff';
         return [
+
+
+
             '<div',
                 ...setClass ([ setFileName ([ $is_set, 'wrapper' ]) ]),
                 ...setStyle ([
@@ -26,6 +29,9 @@
                     'z-index' => 0,
                 ]),
             '>',
+
+
+
                 ...array_map (function ($i, $k) use ($is_proper, $is_set) {
                     // $is_picture = $i;
                     $is_picture = getPictureRandom (isKeyHasValidPath ($i, 'gallery'));
@@ -57,38 +63,13 @@
                                     ' src=\'' . $is_picture . '\'',
                                     ...setClass ([ setFileName ([ $is_set, 'photo' ]) ]),
                                     ...setStyle ([
-                                        ...isTrue ($is_proper['img']['border']['active']) ? [ 'border' => implode (' ', [ 'solid', $is_proper['img']['border']['size'], $is_proper['theme']['color'] ]) ] : [],
-                                        ...isTrue ($is_proper['img']['border']['radius']) ? [ 'border-radius' => $is_proper['img']['border']['radius'] ] : [],
-                                        ...getStyle ('box-shadow', '2px 2px 1px 0 rgba(0, 0, 0, .5)'),
                                         'align-self' => 'center',
-                                        'height' => 'calc(100% - (' . $is_proper['theme']['margin'] . ' * 2 + ' . $is_proper['dot']['size'] . ') * 2)',
+                                        ...isTrue ($is_proper['dot']['active'])
+                                        ? [ 'height' => 'calc(100% - (' . $is_proper['theme']['margin'] . ' * 2 + ' . $is_proper['dot']['size'] . ') * 2)' ]
+                                        : [ 'height' => 'calc(100% - ' . $is_proper['theme']['margin'] . ' * 2)' ],
                                         'z-index' => 3,
                                     ]),
                                 '>',
-                            ] : [
-                            ],
-                            ...isTrue ($is_headline) ? [
-                                '<div',
-                                    ...setStyle ([
-                                        'left' => $is_proper['theme']['margin'],
-                                        'position' => 'absolute',
-                                        'top' => $is_proper['theme']['margin'],
-                                        'width' => 'calc(100% - ' . $is_proper['theme']['margin'] . ' * 2)',
-                                        'z-index' => 2,
-                                    ]),
-                                '>',
-                                    '<div', ...setClass ([ 'col-4', 'd-none', 'd-lg-flex' ]), '>',
-                                        '<div',
-                                            ...setClass ([ 'd-lg-inline-block', setFileName ([ $is_set, 'headline' ]) ]),
-                                            ...setStyle ([
-                                                'background-color' => setHexInvert ($is_proper['theme']['color']),
-                                                'padding' => $is_proper['theme']['margin'],
-                                            ]),
-                                        '>',
-                                            ...$is_headline,
-                                        '</div>',
-                                    '</div>',
-                                '</div>',
                             ] : [
                             ],
                             ...isTrue ($is_photo) ? [
@@ -111,6 +92,10 @@
                         '</div>',
                     ]);
                 }, $is_array, array_keys ($is_array)),
+
+
+
+
                 ...array_map (function ($i, $k) use ($is_proper, $is_set) {
                     return implode ('', [
                         '<div',
@@ -167,6 +152,11 @@
                         '</div>',
                     ]);
                 }, [ 'left', 'right' ], array_keys ([ 'left', 'right' ])),
+
+
+
+
+
                 ...isTrue ($is_proper['dot']['active']) ? [
                     '<div',
                         ...setClass (setFileName ([ $is_set, 'dot', 'hidden' ])),
@@ -205,25 +195,22 @@
                                                 ...getStyle ('circle-size', $is_proper['dot']['size']),
                                                 'background-color' => !$k ? setHexInvert ($is_proper['theme']['color']) : $is_proper['theme']['color'],
                                                 'transition' => $is_proper['theme']['ease'],
-                                                ...!isTrue ($is_proper['dot']['border']['active']) ? [ 'z-index' => 2 ] : [],
+                                                'z-index' => 2,
                                             ]),
                                         '>',
                                         '</div>',
-                                        ...isTrue ($is_proper['dot']['border']['active']) ? [
-                                            '<div',
-                                                ...setClass (setFileName ([ $is_set, 'dot', 'border' ])),
-                                                ...setStyle ([
-                                                    ...getStyle ('circle-size', 'calc(' . $is_proper['dot']['size'] . ' + ' . $is_proper['dot']['border']['size'] . ' * 2)'),
-                                                    'background-color' => !$k ? setHexInvert ($is_proper['theme']['color']) : $is_proper['theme']['color'],
-                                                    'opacity' => .25,
-                                                    'position' => 'absolute',
-                                                    'transition' => $is_proper['theme']['ease'],
-                                                    'z-index' => 1,
-                                                ]),
-                                            '>',
-                                            '</div>',
-                                        ] : [
-                                        ],
+                                        '<div',
+                                            ...setClass (setFileName ([ $is_set, 'dot', 'border' ])),
+                                            ...setStyle ([
+                                                ...getStyle ('circle-size', 'calc(' . $is_proper['dot']['size'] . ' + ' . $is_proper['dot']['border']['size'] . ' * 2)'),
+                                                'background-color' => !$k ? setHexInvert ($is_proper['theme']['color']) : $is_proper['theme']['color'],
+                                                'opacity' => .25,
+                                                'position' => 'absolute',
+                                                'transition' => $is_proper['theme']['ease'],
+                                                'z-index' => 1,
+                                            ]),
+                                        '>',
+                                        '</div>',
                                     '</div>',
                                 ]);
                             }, range (0, count ($is_array) - 1), array_keys (range (0, count ($is_array) - 1))),
@@ -231,6 +218,12 @@
                     '</div>',
                 ] : [
                 ],
+
+
+
+
+
+
             '</div>',
         ];
     };

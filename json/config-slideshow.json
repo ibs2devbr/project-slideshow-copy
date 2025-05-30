@@ -11,23 +11,15 @@
     "dot": {
         "active": true,
         "border": {
-            "active": true,
             "size": ".25rem"
         },
         "gap": "1rem",
         "size": ".5rem"
     },
-    "img": {
-        "border": {
-            "active": true,
-            "radius": "1rem",
-            "size": ".5rem"
-        }
-    },
     "theme": {
         "color": "#fff",
         "ease": "all 0.35s ease-in-out",
         "margin": "1rem",
-        "type": "slide"
+        "type": "photo"
     }
 }

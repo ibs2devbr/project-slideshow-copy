@@ -1,3 +1,12 @@
+@use 'variable';
+
+$color-black: variable.$color-black;
+$color-white: variable.$color-white;
+$color-dark: variable.$color-dark;
+$color-light: variable.$color-light;
+$color-info: variable.$color-info;
+$color-danger: variable.$color-danger;
+
 $color: (
     'black': #{ $color-black },
     'dark': #{ $color-dark },
@@ -8,7 +17,13 @@ $color: (
 );
 
 @each $key, $value in $color {
-    .bg-#{$key} { background-color: $value !important; };
-    .border-#{$key} { border-color: $value !important; };
-    .text-#{$key} { color: $value !important; };
+    .bg-#{$key} {
+        background-color: $value !important; 
+    };
+    .border-#{$key} {
+        border-color: $value !important; 
+    };
+    .text-#{$key} {
+        color: $value !important;
+    };
 };

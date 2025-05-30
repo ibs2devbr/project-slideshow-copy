@@ -1,8 +1,20 @@
-html,
-body
-{
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-}
+@use 'variable';
+
+$color-black: variable.$color-black;
+$color-white: variable.$color-white;
+$color-dark: variable.$color-dark;
+$color-light: variable.$color-light;
+$color-info: variable.$color-info;
+$color-danger: variable.$color-danger;
+
+@use 'button.scss';
+
+@use 'color.scss';
+
+@use 'palette.scss';
+
+@use 'scrollbar.scss';
+
+@use 'selector.scss';
+
+@use 'table.scss';
