@@ -11,7 +11,7 @@
     ]);
 
     define ('defineBodyContent', [
-        ...setSlideshow ('jpg'),
+        ...setMarketPage (),
     ]);
 
     define ('defineFloatContent', [

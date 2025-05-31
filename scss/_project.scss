@@ -2,15 +2,20 @@
 
 $dimension: variable.$dimension;
 
+$absolute-start : 160;
+$absolute-end : 640;
+$relative-start : 25;
+$relative-end : 100;
+
 @each $key, $value in $dimension {
-    @for $i from 320 through 640 {
+    @for $i from $absolute-start through $absolute-end {
         @media (min-width: $value) {
             .height-absolute-#{$key}-#{$i} {
                 height: #{$i}px !important;
             };
         };
     };
-    @for $i from 25 through 100 {
+    @for $i from $relative-start through $relative-end {
         @media (min-width: $value) {
             .height-relative-#{$key}-#{$i} {
                 height: #{$i * 1%} !important;
@@ -19,13 +24,13 @@ $dimension: variable.$dimension;
     };
 };
 
-@for $i from 320 through 640 {
+@for $i from $absolute-start through $absolute-end {
     .height-absolute-#{$i} {
         height: #{$i}px;
     };
 };
 
-@for $i from 25 through 100 {
+@for $i from $relative-start through $relative-end {
     .height-relative-#{$i} {
         height: #{$i * 1%};
     };
