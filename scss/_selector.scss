@@ -1,24 +1,19 @@
-@use 'variable';
-
-$color-black: variable.$color-black;
-$color-white: variable.$color-white;
-$color-dark: variable.$color-dark;
-$color-light: variable.$color-light;
-$color-info: variable.$color-info;
-$color-danger: variable.$color-danger;
-
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html {
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;
-    scroll-behavior: smooth;
     width: 100%;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -27,10 +22,6 @@ body {
     -ms-user-select: none;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-    height: 100%;
-    margin: 0;
     overflow-x: hidden;
-    padding: 0;
     user-select: none;
-    width: 100%;
 }

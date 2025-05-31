@@ -1,26 +1,32 @@
-$screen-dimension: (
-    'sm' : 576px,
-    'md' : 768px,
-    'lg' : 992px,
-    'xl' : 1200px,
-    'xxl' : 1400px,
-);
+@use 'variable';
 
-@media (min-width: 992px) {
-    @for $i from 1 through 12 {
-        @each $screen-key, $screen-value in $screen-dimension {
-            .h-#{$screen-key}-#{$i} {
-                height: 100px;
-            }
-        }
-    }
+$dimension: variable.$dimension;
 
-    // .h-lg-9 {
-    //     height: 100%;
-    // }
-    // .h-sm-1 {}
-    // .h-md-1 {}
-    // .h-lg-1 {}
-    // .h-xl-1 {}
-    // .h-xxl-1 {}
-}
+@each $key, $value in $dimension {
+    @for $i from 320 through 640 {
+        @media (min-width: $value) {
+            .height-absolute-#{$key}-#{$i} {
+                height: #{$i}px !important;
+            };
+        };
+    };
+    @for $i from 25 through 100 {
+        @media (min-width: $value) {
+            .height-relative-#{$key}-#{$i} {
+                height: #{$i * 1%} !important;
+            };
+        };
+    };
+};
+
+@for $i from 320 through 640 {
+    .height-absolute-#{$i} {
+        height: #{$i}px;
+    };
+};
+
+@for $i from 25 through 100 {
+    .height-relative-#{$i} {
+        height: #{$i * 1%};
+    };
+};

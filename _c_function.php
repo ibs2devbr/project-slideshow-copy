@@ -42,12 +42,6 @@
 
     function getStyle (string $is_key = '', float|string $is_input = ''): array {
         $is_result = [
-            ...isTextShadow ($is_input) ? [
-                '-webkit-text-shadow' => $is_input,
-                '-moz-text-shadow' =>$is_input,
-                'text-shadow' => $is_input,
-            ] : [
-            ],
             'background-image' => [
                 ...file_exists ($is_input) ? [
                     'background-attachment' => 'scroll',
@@ -58,8 +52,8 @@
                 ] : [
                 ],
             ],
-            'circle-size' => [ 'border-radius' => '50%', 'height' => $is_input, 'width' => $is_input ],
-            'center-position' => [ 'left' => '50%', 'position' => 'absolute', 'top' => '50%', 'transform' => 'translate(-50%, -50%)' ],
+            'circle' => [ 'border-radius' => '50%', 'height' => $is_input, 'width' => $is_input ],
+            'center' => [ 'left' => '50%', 'position' => 'absolute', 'top' => '50%', 'transform' => 'translate(-50%, -50%)' ],
             'between-line' => [
                 'background-color' => 'rgba(0, 0, 0, .1)',
                 'border-width' => '1px 0',
@@ -68,12 +62,12 @@
                 'height' => getNumber ($is_input) . 'rem',
                 'width' => '100%',
             ],
-            'display-flex' => [
+            'flex' => [
                 'align-items' => 'center',
                 'display' => 'flex',
                 'justify-content' => inArray ($is_input, [ 'start', 'end', 'center', 'space-between', 'space-around', 'space-evenly' ], 'center'),
             ],
-            'backdrop-filter-blur' => [
+            'filter-blur' => [
                 '-webkit-backdrop-filter' => 'blur(' . (in_array ($is_input, setDecimalRange (100)) ? $is_input : 25) . 'px)',
                 'backdrop-filter' => 'blur(' . (in_array ($is_input, setDecimalRange (100)) ? $is_input : 25) . 'px)',
             ],
@@ -82,6 +76,14 @@
                     '-webkit-box-shadow' => $is_input,
                     '-moz-box-shadow' =>$is_input,
                     'box-shadow' => $is_input,
+                ] : [
+                ],
+            ],
+            'text-shadow' => [
+                ...isTextShadow ($is_input) ? [
+                    '-webkit-text-shadow' => $is_input,
+                    '-moz-text-shadow' =>$is_input,
+                    'text-shadow' => $is_input,
                 ] : [
                 ],
             ],

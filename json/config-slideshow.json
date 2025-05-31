@@ -1,7 +1,6 @@
 {
     "arrow": {
         "border": {
-            "active": true,
             "size": ".5rem"
         },
         "font-size": "1.25rem",
@@ -9,7 +8,6 @@
         "size": "2rem"
     },
     "dot": {
-        "active": true,
         "border": {
             "size": ".25rem"
         },

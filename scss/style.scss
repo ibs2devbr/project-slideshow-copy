@@ -1,12 +1,3 @@
-@use 'variable';
-
-$color-black: variable.$color-black;
-$color-white: variable.$color-white;
-$color-dark: variable.$color-dark;
-$color-light: variable.$color-light;
-$color-info: variable.$color-info;
-$color-danger: variable.$color-danger;
-
 @use 'button.scss';
 
 @use 'color.scss';
